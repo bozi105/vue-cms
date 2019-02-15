@@ -10,23 +10,36 @@
         </div>
       </div>
     </div>
+
+    <!-- 图片列表区域 -->
+    <ul class="photo-list">
+       <router-link v-for="item in photoList" :key="item.id" :to="'/home/photoInfo'+item.id" tag="li">
+          <img v-lazy="item.img_url">
+          <div class="info">
+            <h1 class="info-title">{{item.title}}</h1>
+            <div class="info-body">{{item.zhaiyao}}</div>
+          </div>
+       </router-link>
+    </ul>
   </div>
 </template>
 
 <script>
-     import mui from "@/mui/js/mui.js"
+    import mui from "@/mui/js/mui.js"
 
 
 
 export default {
   data() {
     return {
-      category:[]
+      category:[],
+      photoList:[]
     };
   },
 
   created(){
     this.getimgCategory();
+    this.getphotoList(0);
   },
 
   mounted() {
@@ -43,6 +56,11 @@ export default {
           id:0,
           title:"全部" 
         })
+      })
+    },
+    getphotoList(cateid){
+      this.$http.get("api/getimages/"+cateid).then(result=>{
+        this.photoList=result.body.message
       })
     }
   }
